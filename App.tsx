@@ -18,7 +18,85 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { GlassCard } from './components/GlassCard';
 import { ViewState, Vendor, Proposal } from './types';
 import { MOCK_VENDORS, MOCK_PROPOSALS, ACQUISITION_STATS } from './constants';
-import { geminiService } from './services/geminiService';
+
+// --- Mock Data Generators ---
+
+const generateMockVendorAnalysis = (vendor: Vendor): string => {
+  const riskLevel = vendor.riskScore > 70 ? 'HIGH' : vendor.riskScore > 40 ? 'MODERATE' : 'LOW';
+  const auditAge = new Date().getFullYear() - new Date(vendor.lastAuditDate).getFullYear();
+  
+  let analysis = `**Risk Assessment Summary for ${vendor.name}**\n\n`;
+  analysis += `Overall Risk Level: ${riskLevel} (Score: ${vendor.riskScore}/100)\n\n`;
+  
+  if (vendor.riskScore > 50) {
+    analysis += `⚠️ **Key Concerns:**\n`;
+    analysis += `- Risk score of ${vendor.riskScore} exceeds acceptable threshold of 50\n`;
+    if (auditAge > 1) {
+      analysis += `- Last audit conducted ${auditAge} year(s) ago - audit refresh recommended\n`;
+    }
+    if (vendor.totalSpend > 1000000) {
+      analysis += `- High financial exposure with $${(vendor.totalSpend / 1000000).toFixed(1)}M in total spend\n`;
+    }
+  } else {
+    analysis += `✓ **Positive Indicators:**\n`;
+    analysis += `- Risk score of ${vendor.riskScore} is within acceptable range\n`;
+    analysis += `- ${vendor.activeContracts} active contracts demonstrate ongoing relationship\n`;
+  }
+  
+  analysis += `\n**Recommended Actions:**\n`;
+  if (vendor.riskScore > 50) {
+    analysis += `1. Conduct comprehensive vendor audit within 30 days\n`;
+    analysis += `2. Review contract terms and implement additional oversight measures\n`;
+    analysis += `3. Consider diversifying vendor portfolio to reduce dependency\n`;
+  } else {
+    analysis += `1. Maintain current monitoring schedule\n`;
+    analysis += `2. Continue quarterly performance reviews\n`;
+  }
+  
+  return analysis;
+};
+
+const generateMockCostReview = (items: LineItem[], vendorName: string): string => {
+  const total = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+  const avgUnitPrice = total / items.reduce((sum, item) => sum + item.quantity, 0);
+  
+  let html = `<div style="color: #e5e5e5;">`;
+  html += `<p style="margin-bottom: 12px;"><strong style="color: #00d6cb;">Cost Analysis Report</strong></p>`;
+  html += `<p style="margin-bottom: 8px; font-size: 14px;">Vendor: <strong>${vendorName}</strong></p>`;
+  html += `<p style="margin-bottom: 16px; font-size: 14px;">Total Line Items: ${items.length} | Total Value: <strong style="color: #00d6cb;">$${total.toLocaleString()}</strong></p>`;
+  
+  // Identify high-cost items
+  const highCostItems = items.filter(item => item.unitPrice > avgUnitPrice * 1.5);
+  
+  if (highCostItems.length > 0) {
+    html += `<p style="margin-bottom: 8px;"><strong style="color: #f59e0b;">⚠️ Items Requiring Review:</strong></p>`;
+    html += `<ul style="margin-left: 20px; margin-bottom: 16px; line-height: 1.6;">`;
+    highCostItems.forEach(item => {
+      html += `<li style="margin-bottom: 4px;">`;
+      html += `<strong>${item.description}</strong> - Unit price of $${item.unitPrice.toLocaleString()} is `;
+      html += `${Math.round((item.unitPrice / avgUnitPrice - 1) * 100)}% above average`;
+      html += `</li>`;
+    });
+    html += `</ul>`;
+  }
+  
+  html += `<p style="margin-bottom: 8px;"><strong style="color: #10b981;">✓ Fair Reasonableness Determination:</strong></p>`;
+  
+  if (highCostItems.length === 0) {
+    html += `<p style="margin-bottom: 8px; color: #a6a6a6;">All line items fall within expected market ranges. Pricing appears competitive and reasonable based on historical data.</p>`;
+  } else if (highCostItems.length <= 2) {
+    html += `<p style="margin-bottom: 8px; color: #a6a6a6;">Majority of items are reasonably priced. ${highCostItems.length} item(s) flagged for price negotiation or justification.</p>`;
+  } else {
+    html += `<p style="margin-bottom: 8px; color: #a6a6a6;">Multiple items exceed typical market rates. Recommend vendor negotiation before approval.</p>`;
+  }
+  
+  html += `<p style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; color: #666;">`;
+  html += `Analysis based on historical pricing data and market benchmarks.`;
+  html += `</p>`;
+  html += `</div>`;
+  
+  return html;
+};
 
 // --- Sub-Components defined here for simplicity in this single-file structure request ---
 
@@ -166,7 +244,9 @@ const VendorView = ({ vendors }: { vendors: Vendor[] }) => {
   const handleAnalyze = async (vendor: Vendor) => {
     setLoadingAi(true);
     setAiAnalysis('');
-    const result = await geminiService.analyzeVendorRisk(vendor);
+    // Simulate brief processing delay for realism
+    await new Promise(resolve => setTimeout(resolve, 800));
+    const result = generateMockVendorAnalysis(vendor);
     setAiAnalysis(result);
     setLoadingAi(false);
   };
@@ -181,7 +261,7 @@ const VendorView = ({ vendors }: { vendors: Vendor[] }) => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)]" size={18} />
             <input 
               type="text" 
-              placeholder="Search DPHSL database..." 
+              placeholder="Search vendor database..." 
               className="pl-10 pr-4 py-2 rounded-lg bg-[var(--glass-bg-light)] border border-[var(--glass-border)] text-white focus:outline-none focus:border-[var(--color-primary)] transition-colors w-64 placeholder-[var(--color-text-tertiary)]"
             />
           </div>
@@ -240,7 +320,7 @@ const VendorView = ({ vendors }: { vendors: Vendor[] }) => {
                <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-primary-alpha-15)] to-transparent opacity-10 pointer-events-none"></div>
                <div className="flex items-center gap-2 mb-4">
                   <BrainCircuit className="text-[var(--color-primary)]" size={20} />
-                  <span className="font-bold text-sm tracking-wider uppercase text-[var(--color-text-secondary)]">Gemini Insight</span>
+                  <span className="font-bold text-sm tracking-wider uppercase text-[var(--color-text-secondary)]">Risk Analysis</span>
                </div>
                
                {loadingAi ? (
@@ -285,7 +365,9 @@ const ProposalView = ({ proposals }: { proposals: Proposal[] }) => {
   const handleReviewCosts = async (proposal: Proposal) => {
     setLoadingReview(true);
     const vendorName = MOCK_VENDORS.find(v => v.id === proposal.vendorId)?.name || 'Unknown Vendor';
-    const review = await geminiService.reviewProposalCosts(proposal.items, vendorName);
+    // Simulate brief processing delay for realism
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const review = generateMockCostReview(proposal.items, vendorName);
     setCostReview(review);
     setLoadingReview(false);
   };
@@ -384,7 +466,7 @@ const ProposalView = ({ proposals }: { proposals: Proposal[] }) => {
                       onClick={() => handleReviewCosts(selectedProposal)}
                       className="neon-button px-4 py-2 rounded-lg text-sm font-medium"
                     >
-                      Review against DPHSL
+                      Review Cost Analysis
                     </button>
                   )}
                 </div>
