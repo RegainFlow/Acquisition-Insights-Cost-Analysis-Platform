@@ -2,16 +2,20 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# Procurement Analytics & Vendor Intelligence Platform
 
-This contains everything you need to run your app locally.
+**Description:** An enterprise-grade Blazor + .NET system designed to streamline procurement operations, vendor management, and cost forecasting. Integrates seamlessly with major ERP systems and external pricing APIs to generate detailed, itemized cost breakdowns and actionable financial insights.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1i48GvHipyiAl8ASFmLZmsWmDQGHqTXVt
+**Primary Metric:** 4× Faster Cost Analysis
+
+**Tags:**
+- Strategic Sourcing
+- Blazor + .NET
+- Enterprise Cost Intelligence
 
 ## Run Locally
 
 **Prerequisites:**  Node.js
-
 
 1. Install dependencies:
    `npm install`

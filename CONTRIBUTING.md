@@ -1,4 +1,4 @@
-# Contributing to RegainFlow - Acquisition Insights & Cost Analysis Platform
+# Contributing to RegainFlow - Procurement Analytics & Vendor Intelligence Platform
 
 Welcome to the RegainFlow project! This guide will help you understand our architecture, design system, and contribution workflow as we scale this platform.
 
@@ -20,13 +20,13 @@ Welcome to the RegainFlow project! This guide will help you understand our archi
 
 ## Project Overview
 
-**RegainFlow** is an AI-powered acquisition insights and cost analysis platform designed to help organizations manage vendors, analyze proposals, and gain actionable insights through intelligent automation.
+**RegainFlow** is an AI-powered procurement analytics and vendor intelligence platform designed to help organizations manage vendors, analyze proposals, and gain actionable insights through intelligent automation.
 
 ### Core Features
 
-- **Dashboard Analytics**: Real-time acquisition metrics and KPIs
+- **Dashboard Analytics**: Real-time procurement metrics and KPIs
 - **Vendor Management**: Comprehensive vendor tracking with risk scoring
-- **Proposal Analysis**: AI-powered cost analysis and line-item review
+- **Proposal Analysis**: AI-powered cost analysis and line-item review (benchmarked against industry standards)
 - **AI Insights**: Gemini-powered intelligent recommendations
 - **Glass Morphism UI**: Modern, premium design with neon accents
 
@@ -844,4 +844,4 @@ If you have questions or run into issues:
 
 **Thank you for contributing to RegainFlow!** 🚀
 
-Your contributions help build a better acquisition insights platform for everyone.
+Your contributions help build a better procurement analytics platform for everyone.

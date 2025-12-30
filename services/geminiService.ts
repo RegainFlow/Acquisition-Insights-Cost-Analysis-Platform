@@ -15,7 +15,7 @@ export const geminiService = {
     try {
       const model = 'gemini-2.5-flash';
       const prompt = `
-        Analyze the following vendor for acquisition risk.
+        Analyze the following vendor for procurement risk.
         Vendor Name: ${vendor.name}
         Category: ${vendor.category}
         Risk Score (0-100, 100 is high risk): ${vendor.riskScore}
@@ -44,15 +44,15 @@ export const geminiService = {
   },
 
   /**
-   * Reviews proposal line items for cost anomalies compared to market standards (simulated DPHSL).
+   * Reviews proposal line items for cost anomalies compared to market standards.
    */
   reviewProposalCosts: async (items: LineItem[], vendorName: string): Promise<string> => {
     try {
       const model = 'gemini-2.5-flash';
       const itemsJson = JSON.stringify(items);
-      
+
       const prompt = `
-        You are an expert government acquisition cost analyst.
+        You are an expert corporate procurement cost analyst.
         Review the following line items for a proposal from vendor "${vendorName}".
         
         Line Items: ${itemsJson}
@@ -82,21 +82,21 @@ export const geminiService = {
   },
 
   /**
-   * Generates a chat response for general acquisition insights.
+   * Generates a chat response for general procurement insights.
    */
-  askAcquisitionAssistant: async (query: string, contextData: string): Promise<string> => {
+  askProcurementAssistant: async (query: string, contextData: string): Promise<string> => {
     try {
       const model = 'gemini-2.5-flash';
       const prompt = `
-        Context Data (Acquisition Stats): ${contextData}
+        Context Data (Procurement Stats): ${contextData}
         
         User Query: ${query}
         
-        Answer as an Acquisition Intelligence Assistant named "RegainAI".
+        Answer as a Procurement Intelligence Assistant named "RegainAI".
         Be brief, professional, and data-driven.
       `;
 
-       const response = await ai.models.generateContent({
+      const response = await ai.models.generateContent({
         model,
         contents: prompt,
       });

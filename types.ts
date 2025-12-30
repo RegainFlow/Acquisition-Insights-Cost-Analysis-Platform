@@ -28,7 +28,7 @@ export interface LineItem {
   category: string;
 }
 
-export interface AcquisitionStat {
+export interface ProcurementStat {
   month: string;
   spend: number;
   savings: number;

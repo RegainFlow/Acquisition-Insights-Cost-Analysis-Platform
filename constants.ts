@@ -1,5 +1,5 @@
 
-import { Vendor, Proposal, AcquisitionStat } from './types';
+import { Vendor, Proposal, ProcurementStat } from './types';
 
 export const MOCK_VENDORS: Vendor[] = [
   {
@@ -72,7 +72,7 @@ export const MOCK_PROPOSALS: Proposal[] = [
   }
 ];
 
-export const ACQUISITION_STATS: AcquisitionStat[] = [
+export const PROCUREMENT_STATS: ProcurementStat[] = [
   { month: 'Jan', spend: 400000, savings: 50000 },
   { month: 'Feb', spend: 300000, savings: 75000 },
   { month: 'Mar', spend: 550000, savings: 45000 },
