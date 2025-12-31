@@ -281,7 +281,7 @@ import { LayoutDashboard, Users, FileText } from 'lucide-react';
 
 ```bash
 git clone <repository-url>
-cd Acquisition-Insights-Cost-Analysis-Platform
+cd procurement-analytics
 ```
 
 2. **Install dependencies**
